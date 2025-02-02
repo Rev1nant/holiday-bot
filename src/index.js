@@ -1,7 +1,7 @@
 import { Bot, GrammyError, HttpError } from 'grammy'
 import dotenv from 'dotenv'
 import { hydrate } from '@grammyjs/hydrate'
-import { parseWebsiteRU, parseWebsiteEN } from './parser.js'
+import { holidayEN, holidayRU } from './parser.js'
 import { languageKeyboard, menuKeyboardEN, menuKeyboardRU } from './inlineKeyboard.js'
 
 dotenv.config()
@@ -24,7 +24,7 @@ bot.command('start', async(ctx) => {
 })
 
 bot.callbackQuery('language', async(ctx) => {
-    await ctx.answerCallbackQuery() 
+    await ctx.answerCallbackQuery()
     ctx.callbackQuery.message.editText('Select language', {
         reply_markup: languageKeyboard
     })
@@ -32,19 +32,15 @@ bot.callbackQuery('language', async(ctx) => {
 
 bot.callbackQuery('english', async(ctx) => {
     await ctx.answerCallbackQuery()
-    parseWebsiteEN().then((text) => {
-        ctx.callbackQuery.message.editText(text, {
-            reply_markup: menuKeyboardEN
-        })
+    ctx.callbackQuery.message.editText(holidayEN, {
+        reply_markup: menuKeyboardEN
     })
 })
 
 bot.callbackQuery('russian', async(ctx) => {
     await ctx.answerCallbackQuery()
-    parseWebsiteRU().then((text) => {
-        ctx.callbackQuery.message.editText(text, {
-            reply_markup: menuKeyboardRU
-        })
+    ctx.callbackQuery.message.editText(holidayRU, {
+        reply_markup: menuKeyboardRU
     })
 })
 

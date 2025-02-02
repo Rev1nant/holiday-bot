@@ -1,5 +1,18 @@
 import axios from 'axios'
-import cheerio from './node_modules/cheerio/dist/commonjs/index.js'
+import cheerio from '../node_modules/cheerio/dist/commonjs/index.js'
+
+export let holidayRU = ''
+export let holidayEN = ''
+
+async function updateHoliday() {
+    parseWebsiteRU().then((holiday) => {
+        holidayRU = holiday
+    })
+    parseWebsiteEN().then((holiday) => {
+        holidayEN = holiday
+    })
+    setTimeout(updateHoliday, 1000 * 60 * 60 * 6)
+}
 
 export async function parseWebsiteRU() {
     try {
@@ -12,13 +25,13 @@ export async function parseWebsiteRU() {
         
         let date = new Date()
         
-        let text = `Праздники на: ${date}\n`
+        let holiday = `Праздники на: ${date}\n`
 
         elements.each((index, element) => {
-            text += `${$(element).text().trim()}\n`
+            holiday += `${$(element).text().trim()}\n`
         })
 
-        return text
+        return holiday
     } catch (error) {
         console.error(`Ошибка при парсинге сайта: ${error}`)
         return null
@@ -36,15 +49,17 @@ export async function parseWebsiteEN() {
         
         let date = new Date()
         
-        let text = `Holiday on: ${date}\n`
+        let holiday = `Holiday on: ${date}\n`
 
         elements.each((index, element) => {
-            text += `${$(element).text().trim()}\n`
+            holiday += `${$(element).text().trim()}\n`
         })
 
-        return text
+        return holiday
     } catch (error) {
         console.error(`Ошибка при парсинге сайта: ${error}`)
         return null
     }
 }
+
+updateHoliday()
